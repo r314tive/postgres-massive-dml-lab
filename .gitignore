@@ -1,0 +1,8 @@
+.env
+.tmp/
+generated/
+logs/
+*.log
+*.sql.generated
+postgres-data/
+.DS_Store

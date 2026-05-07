@@ -1,0 +1,47 @@
+# Representative EXPLAIN output
+
+This is a shortened example of the shape to inspect. Exact timing, row counts,
+and buffer numbers vary by machine, PostgreSQL version, data volume, and cache
+state.
+
+```text
+BEGIN;
+SET LOCAL lock_timeout = '1s';
+SET LOCAL statement_timeout = '10min';
+SET LOCAL TimeZone = 'UTC';
+
+EXPLAIN (ANALYZE, BUFFERS)
+UPDATE dml_lab.transaction_log
+...
+WHERE id BETWEEN 1 AND 5000
+  AND (
+        (created_ts IS NULL AND created_at IS NOT NULL)
+     OR (processed_ts IS NULL AND processed_at IS NOT NULL)
+  );
+
+Update on transaction_log  (actual time=42.118..42.119 rows=0 loops=1)
+  Buffers: shared hit=22984 read=0 dirtied=110 written=0
+  ->  Index Scan using transaction_log_pkey on transaction_log
+        (actual time=0.024..5.714 rows=3189 loops=1)
+        Index Cond: ((id >= 1) AND (id <= 5000))
+        Filter: (((created_ts IS NULL) AND (created_at IS NOT NULL))
+              OR ((processed_ts IS NULL) AND (processed_at IS NOT NULL)))
+        Rows Removed by Filter: 1811
+        Buffers: shared hit=179
+Planning:
+  Buffers: shared hit=18
+Planning Time: 0.184 ms
+Execution Time: 42.211 ms
+
+ROLLBACK;
+```
+
+Inspect:
+
+- actual rows selected;
+- index usage;
+- execution time;
+- buffers hit/read;
+- buffers dirtied/written;
+- rows removed by filter;
+- whether the batch size is acceptable for the production workload.
