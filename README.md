@@ -13,6 +13,7 @@ examples with real PostgreSQL transactions.
 - How to create small or large deterministic datasets for experiments.
 - Generated SQL batches with explicit `BEGIN` / `COMMIT`.
 - Generated SQL execution with `psql` meta commands, `tee`, `tmux`, and `nohup`.
+- Optional noisy PostgreSQL demo workloads with `lesovsky/noisia`.
 - Procedure-based update with internal transaction control.
 - Why procedures with internal `COMMIT` must be called top-level.
 - Queue-based update with `FOR UPDATE SKIP LOCKED`.
@@ -46,10 +47,12 @@ stops the server. It does not require Docker.
 ## Interactive Docker Lab
 
 ```bash
-cp .env.example .env
 make docker-reset
 make psql
 ```
+
+The Makefile uses `.env` when it exists, otherwise it falls back to
+`.env.example`.
 
 Useful targets:
 
@@ -67,6 +70,18 @@ To load a larger demo dataset:
 
 ```bash
 make setup-large
+```
+
+To prepare a full demo run with generated SQL files:
+
+```bash
+make demo-prepare
+```
+
+Optional noisy workload demo:
+
+```bash
+NOISIA_DURATION=120 NOISIA_JOBS=2 make noisia-wait
 ```
 
 ## Repository Layout
@@ -102,6 +117,9 @@ make setup-large
 
 - `docs/demo-script.md`  
   Step-by-step flow for a live explanation or master class.
+
+- `docs/noisia-demo.md`
+  Optional noisy workload demo using `lesovsky/noisia`.
 
 - `docs/generated-first-runbook.md`
   Main operational runbook. It treats generated SQL as the primary production
@@ -164,6 +182,22 @@ Run generated files with logging:
 ./scripts/run_generated_update.sh generated/transaction_log_backfill.sql
 ./scripts/run_generated_delete.sh generated/audit_record_delete.sql
 ```
+
+## Demo Workloads
+
+The lab includes optional `lesovsky/noisia` integration through Docker Compose.
+It is intended for local/demo use only.
+
+```bash
+make noisia-help
+make noisia-wait
+make noisia-idle
+make noisia-temp
+make noisia-rollbacks
+make noisia-cleanup
+```
+
+See `docs/noisia-demo.md`.
 
 ## Production Notes
 

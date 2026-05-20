@@ -18,5 +18,18 @@ services:
       timeout: 3s
       retries: 30
 
+  noisia:
+    image: ${NOISIA_IMAGE:-lesovsky/noisia:latest}
+    platform: ${NOISIA_PLATFORM:-linux/amd64}
+    profiles:
+      - workload
+    depends_on:
+      postgres:
+        condition: service_healthy
+    entrypoint:
+      - noisia
+    command:
+      - --help
+
 volumes:
   postgres-data:

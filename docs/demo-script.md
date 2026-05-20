@@ -14,10 +14,12 @@ stops the server.
 ## 2. Start An Interactive Environment
 
 ```bash
-cp .env.example .env
 make docker-reset
 make psql
 ```
+
+The Makefile uses `.env` when it exists, otherwise it falls back to
+`.env.example`.
 
 For a larger demo:
 
@@ -61,7 +63,7 @@ docs/samples/explain-update-batch.txt
 ## 4. Show Reviewable Generated Batches
 
 ```bash
-make generate-update
+make demo-prepare
 less generated/transaction_log_backfill.sql
 make run-generated
 ```
@@ -90,6 +92,26 @@ make generate-delete
 less generated/audit_record_delete.sql
 make run-delete
 ```
+
+## Optional: Add Noisy Workload With Noisia
+
+In another terminal:
+
+```bash
+NOISIA_DURATION=120 NOISIA_JOBS=2 make noisia-wait
+```
+
+In a monitoring terminal:
+
+```bash
+make monitor
+```
+
+Then run the generated UPDATE or DELETE batches. This shows why monitoring,
+timeouts, committed batches, and stop/resume behavior matter under database
+pressure.
+
+More examples are in `docs/noisia-demo.md`.
 
 For operational execution, use `tmux`:
 

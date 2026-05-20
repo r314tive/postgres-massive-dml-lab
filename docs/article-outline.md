@@ -167,7 +167,19 @@ Repository support:
 - `sql/30_queue_update.sql`
 - `sql/40_delete_procedure.sql`
 
-## 11. Monitoring
+## 11. Noisy Demo Workloads
+
+Use noisia as optional local test pressure, not as part of the production
+recipe.
+
+Repository support:
+
+- `compose.yaml`
+- `scripts/run_noisia.sh`
+- `docs/noisia-demo.md`
+- `sql/70_monitoring.sql`
+
+## 12. Monitoring
 
 Cover `pg_stat_activity`, `pg_locks`, `pg_stat_user_tables`,
 `pg_stat_replication`, provider metrics, and application latency.
@@ -175,8 +187,9 @@ Cover `pg_stat_activity`, `pg_locks`, `pg_stat_user_tables`,
 Repository support:
 
 - `docs/production-checklist.md`
+- `sql/70_monitoring.sql`
 
-## 12. Post-Operation Work
+## 13. Post-Operation Work
 
 Cover validation, dead tuples, `VACUUM (ANALYZE)`, and why `VACUUM FULL` is
 usually not a hot-production cleanup tool.
@@ -185,7 +198,7 @@ Repository support:
 
 - `docs/production-checklist.md`
 
-## 13. Demo Flow
+## 14. Demo Flow
 
 Use the repository as a live master class/demo script.
 
@@ -193,7 +206,7 @@ Repository support:
 
 - `docs/demo-script.md`
 
-## 14. Summary
+## 15. Summary
 
 Final message:
 
